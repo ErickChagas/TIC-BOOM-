@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Boom! - Gerenciador Multiplayer de SLA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <div class="logo-section">
+                <h1 class="game-logo">⚡ Tic-Boom! ⚡</h1>
+                <p class="game-subtitle">Gerenciador Multiplayer de SLA</p>
+            </div>
+            
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="playerName">
+                        <strong>Nome do Jogador *</strong>
+                    </label>
+                    <input type="text" class="form-control" id="playerName" placeholder="Digite seu nome" required maxlength="20">
+                    <div class="error-message hidden" id="nameError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <strong>Escolha seu Personagem *</strong>
+                    </label>
+                    <div class="emoji-selector" id="emojiSelector">
+                        <button type="button" class="emoji-option" data-emoji="🤖">🤖</button>
+                        <button type="button" class="emoji-option" data-emoji="🔧">🔧</button>
+                        <button type="button" class="emoji-option" data-emoji="⚡">⚡</button>
+                        <button type="button" class="emoji-option" data-emoji="🎯">🎯</button>
+                        <button type="button" class="emoji-option" data-emoji="🚀">🚀</button>
+                        <button type="button" class="emoji-option" data-emoji="💻">💻</button>
+                        <button type="button" class="emoji-option" data-emoji="🛡️">🛡️</button>
+                        <button type="button" class="emoji-option" data-emoji="⭐">⭐</button>
+                        <button type="button" class="emoji-option" data-emoji="🔥">🔥</button>
+                        <button type="button" class="emoji-option" data-emoji="💎">💎</button>
+                        <button type="button" class="emoji-option" data-emoji="👨‍💻">👨‍💻</button>
+                        <button type="button" class="emoji-option" data-emoji="👩‍💻">👩‍💻</button>
+                        <button type="button" class="emoji-option" data-emoji="🦾">🦾</button>
+                        <button type="button" class="emoji-option" data-emoji="🎮">🎮</button>
+                        <button type="button" class="emoji-option" data-emoji="🚁">🚁</button>
+                        <button type="button" class="emoji-option" data-emoji="🔬">🔬</button>
+                        <button type="button" class="emoji-option" data-emoji="📡">📡</button>
+                        <button type="button" class="emoji-option" data-emoji="🎪">🎪</button>
+                    </div>
+                    <input type="hidden" id="selectedEmoji" required>
+                    <div class="error-message hidden" id="emojiError"></div>
+                </div>
+                
+                <button type="submit" class="btn btn--primary btn--lg btn--full-width">
+                    🎮 Entrar no Jogo
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tela Principal do Jogo -->
+    <div class="game-screen hidden" id="gameScreen">
+        <!-- Header do Jogo -->
+        <header class="game-header">
+            <div class="game-header__left">
+                <h1 class="game-title">⚡ Tic-Boom!</h1>
+            </div>
+            <div class="game-header__center">
+                <button class="btn btn--primary" id="novoTicketBtn">
+                    💣 Novo Ticket
+                </button>
+            </div>
+            <div class="game-header__right">
+                <button class="btn btn--outline btn--sm" id="logoutBtn">
+                    🚪 Sair
+                </button>
+            </div>
+        </header>
+
+        <!-- Layout Principal -->
+        <div class="game-main">
+            <!-- Área do Grid -->
+            <section class="battlefield">
+                <div class="battlefield__container">
+                    <div class="battlefield__grid" id="battlefieldGrid">
+                        <!-- Células do grid serão geradas pelo JS -->
+                    </div>
+                    <div class="safe-zone-overlay">
+                        <div class="safe-zone-label">ZONA SEGURA</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Painel Lateral -->
+            <aside class="game-sidebar">
+                <!-- Informações do Jogador -->
+                <div class="player-info">
+                    <div class="player-card" id="playerCard">
+                        <div class="player-avatar" id="playerAvatar">🤖</div>
+                        <div class="player-details">
+                            <div class="player-name" id="playerNameDisplay">Jogador</div>
+                            <div class="player-rank" id="playerRank">
+                                <span class="rank-icon">🔰</span>
+                                <span class="rank-name">Estagiário</span>
+                            </div>
+                            <div class="player-score" id="playerScore">0 pts</div>
+                        </div>
+                    </div>
+
+                    <div class="controls-info">
+                        <h4>Controles:</h4>
+                        <div class="control-list">
+                            <div class="control-item">
+                                <span class="control-key">WASD</span>
+                                <span class="control-desc">Mover</span>
+                            </div>
+                            <div class="control-item">
+                                <span class="control-key">SETAS</span>
+                                <span class="control-desc">Mover</span>
+                            </div>
+                            <div class="control-item">
+                                <span class="control-key">ESPAÇO</span>
+                                <span class="control-desc">Desarmar</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ranking -->
+                <div class="ranking-panel">
+                    <h3 class="ranking-title">🏆 Ranking</h3>
+                    <div class="ranking-list" id="rankingList">
+                        <!-- Lista de jogadores será inserida aqui -->
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Modal de Novo Ticket -->
+    <div class="modal hidden" id="ticketModal">
+        <div class="modal__overlay" id="modalOverlay"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h2 class="modal__title">💣 Criar Nova Bomba</h2>
+                <button class="modal__close" id="modalClose" type="button">✖</button>
+            </div>
+            
+            <form class="modal__body" id="ticketForm">
+                <div class="form-group">
+                    <label class="form-label" for="tituloTicket">
+                        <strong>Descrição do Problema *</strong>
+                    </label>
+                    <input type="text" class="form-control" id="tituloTicket" placeholder="Ex: Servidor de email fora do ar" required maxlength="100">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="prioridadeTicket">
+                            <strong>Prioridade *</strong>
+                        </label>
+                        <select class="form-control" id="prioridadeTicket" required>
+                            <option value="">Selecione a prioridade</option>
+                            <option value="P1">P1 - Crítico (30 min) - 20 pts</option>
+                            <option value="P2">P2 - Alto (2 horas) - 15 pts</option>
+                            <option value="P3">P3 - Médio (8 horas) - 10 pts</option>
+                            <option value="P4">P4 - Baixo (24 horas) - 5 pts</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="empresaTicket">
+                            <strong>Empresa *</strong>
+                        </label>
+                        <input type="text" class="form-control" id="empresaTicket" placeholder="Nome da empresa" required maxlength="30">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="analistaTicket">
+                        <strong>Analista Responsável *</strong>
+                    </label>
+                    <input type="text" class="form-control" id="analistaTicket" placeholder="Nome do analista" required maxlength="30">
+                </div>
+
+                <div class="modal__footer">
+                    <button type="button" class="btn btn--outline" id="cancelarBtn">Cancelar</button>
+                    <button type="submit" class="btn btn--primary" id="criarBombaBtn">💣 Criar Bomba</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Área de Notificações -->
+    <div id="notificationsArea"></div>
+
+    <!-- Área de Efeitos Visuais -->
+    <div id="explosionEffects"></div>
+
+    <script src="app.js"></script>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script src="script.js"></script>
+</html>
